@@ -1,0 +1,79 @@
+group 'Scaffold'
+version '0.0.1'
+buildscript {
+    apply from: 'dependencies.gradle'
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
+        }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+    }
+
+}
+
+// create an auxiliary file for the MockMaker of the Mockito 2 framework.
+// see http://hadihariri.com/2016/10/04/Mocking-Kotlin-With-Mockito/
+task createTestResources << {
+    def separator = File.separator
+    def fileName = [projectDir, 'src', 'test', 'resources', 'mockito-extensions', 'org.mockito.plugins.MockMaker'].join(separator)
+    def mockMakerFile = new File(fileName)
+    if (mockMakerFile.exists()) {
+        logger.info("File ${mockMakerFile.name} already exists.")
+    } else {
+        def content = System.env.MOCK_MAKER ?: "mock-maker-inline"
+        mockMakerFile.parentFile.mkdirs()
+        mockMakerFile.createNewFile()
+        mockMakerFile.write(content)
+        println "create file ${mockMakerFile.name}"
+    }
+
+}
+repositories {
+    mavenCentral()
+    maven {
+        url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
+    }
+}
+apply plugin: 'idea'
+apply plugin: "application"
+apply plugin: "java"
+apply plugin: "kotlin"
+apply from: 'dependencies.gradle'
+mainClassName = 'scaffold.MainKt'
+
+buildscript {
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+    }
+}
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin/'
+    test.java.srcDirs += 'src/test/kotlin/'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    // This line of code recursively collects and copies all of a project's files
+    // and adds them to the JAR itself. One can extend this task, to skip certain
+    // files or particular types at will
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
+//    compile "io.reactivex:rxjava2:rxjava:$versions.rx"
+//    compile "io.reactivex.rxjava2:rxkotlin:$versions.kotlin"
+//    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
+//    testCompile "org.mockito:mockito-core:2.5.0"
+//    testCompile "com.nhaarman:mockito-kotlin:$versions.kotlin"
+//    testCompile 'de.jodamob.kotlin:kotlin-runner-junit4:0.3.1'
+//    testCompile "org.testfx:testfx-core:4.0.+"
+//    testCompile "org.testfx:testfx-junit:4.0.+"
+}
+
