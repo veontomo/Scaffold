@@ -9,32 +9,34 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<GridPane alignment="center" gridLinesVisible="true" hgap="0" prefHeight="30.0" prefWidth="500.0" vgap="0"
-
+<GridPane alignment="center" gridLinesVisible="true" hgap="5" prefHeight="30.0" prefWidth="500.0" vgap="5"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112"
           fx:controller="Controller">
+
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="60.0" percentWidth="10.0"/>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="350.0" percentWidth="70.0"/>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="50.0" percentWidth="10.0"/>
     </columnConstraints>
+
     <rowConstraints>
         <RowConstraints maxHeight="30.0" minHeight="20.0" prefHeight="25.0" vgrow="SOMETIMES"/>
     </rowConstraints>
+
     <Text text="Files" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="selectedFiles"/>
     <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
 
     <Text text="Folder" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="folderName"/>
     <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
     <Text text="Scaffold as" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="pattern"/>
 
     <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="BASELINE_CENTER">
 
-        <Button mnemonicParsing="false" text="Start"/>
-        <Button mnemonicParsing="false" text="Clear"/>
+        <Button mnemonicParsing="false" text="Start" fx:id="start"/>
+        <Button mnemonicParsing="false" text="Clear" fx:id="clear"/>
     </HBox>
 </GridPane>

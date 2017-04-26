@@ -2,6 +2,7 @@ import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent
 import javafx.scene.Scene
+import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 
 import java.net.URL
@@ -10,18 +11,20 @@ import java.net.URL
 fun main(args: Array<String>) {
     Main.main(args)
 }
+
 class Main : Application() {
 
+    /**
+     * Name of the layout file corresponding to this view. It is supposed to be in the resource folder.
+     */
+    private val LAYOUT = "mainview.fxml"
+
     override fun start(primaryStage: Stage) {
-        val resource = javaClass.getResource("mainview.fxml")
-        if (resource != null) {
-            val root = FXMLLoader.load<Parent>(resource)
-            primaryStage.title = "Hello World"
-            primaryStage.scene = Scene(root, 550.0, 320.0)
-            primaryStage.show()
-        } else {
-            print("resource not found")
-        }
+        primaryStage.title = "Scaffold"
+
+        val grid = FXMLLoader.load<GridPane>(javaClass.getResource(LAYOUT))
+        primaryStage.scene = Scene(grid, primaryStage.width - grid.padding.left - grid.padding.right, 500.0)
+        primaryStage.show()
     }
 
     companion object {
