@@ -1,3 +1,5 @@
+import io.reactivex.functions.Action
+import io.reactivex.functions.Consumer
 import javafx.event.EventHandler
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable
@@ -7,6 +9,7 @@ import java.net.URL
 import java.util.*
 
 class Controller : Initializable {
+    private val model = Model()
     @FXML private var start: Button? = null
     @FXML private var clear: Button? = null
     @FXML private var selectedFiles: TextField? = null
@@ -15,7 +18,7 @@ class Controller : Initializable {
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         start?.onAction = EventHandler {
-            println("ciao")
+            model.start("a", "b", "c").subscribe({ print("Done") }, {print("Error")} )
         }
         clear?.onAction = EventHandler { clearInputField() }
 

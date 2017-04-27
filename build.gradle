@@ -67,8 +67,8 @@ jar {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-//    compile "io.reactivex:rxjava2:rxjava:$versions.rx"
-//    compile "io.reactivex.rxjava2:rxkotlin:$versions.kotlin"
+    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: versions.rx
+    compile "io.reactivex.rxjava2:rxkotlin:$versions.kotlin"
 //    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
 //    testCompile "org.mockito:mockito-core:2.5.0"
 //    testCompile "com.nhaarman:mockito-kotlin:$versions.kotlin"
