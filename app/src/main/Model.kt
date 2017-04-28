@@ -6,7 +6,7 @@ import io.reactivex.functions.Action
  */
 class Model{
     fun start(fileName: String, folderName: String, pattern: String): Completable {
-        return Completable.fromAction({print("Compleatble done")})
+        return Completable.complete()
 
 
     }

@@ -1,5 +1,13 @@
 group 'Scaffold'
 version '0.0.1'
+
+apply plugin: 'idea'
+apply plugin: "application"
+apply plugin: "java"
+apply plugin: "kotlin"
+apply from: 'dependencies.gradle'
+mainClassName = 'scaffold.MainKt'
+
 buildscript {
     apply from: 'dependencies.gradle'
     repositories {
@@ -31,18 +39,13 @@ task createTestResources << {
     }
 
 }
+sourceCompatibility = JavaVersion.VERSION_1_8
 repositories {
     mavenCentral()
     maven {
         url "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
     }
 }
-apply plugin: 'idea'
-apply plugin: "application"
-apply plugin: "java"
-apply plugin: "kotlin"
-apply from: 'dependencies.gradle'
-mainClassName = 'scaffold.MainKt'
 
 buildscript {
 
@@ -67,13 +70,7 @@ jar {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-    compile group: 'io.reactivex.rxjava2', name: 'rxjava', version: versions.rx
-    compile "io.reactivex.rxjava2:rxkotlin:$versions.kotlin"
-//    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin"
-//    testCompile "org.mockito:mockito-core:2.5.0"
-//    testCompile "com.nhaarman:mockito-kotlin:$versions.kotlin"
-//    testCompile 'de.jodamob.kotlin:kotlin-runner-junit4:0.3.1'
-//    testCompile "org.testfx:testfx-core:4.0.+"
-//    testCompile "org.testfx:testfx-junit:4.0.+"
+    compile 'org.reactivestreams:reactive-streams:1.0.0.final'
+    compile 'io.reactivex.rxjava2:rxkotlin:2.0.0'
 }
 

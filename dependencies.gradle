@@ -1,4 +1,4 @@
 ext.versions = [
-        kotlin: "1.1.2-eap-77",
+        kotlin: "1.1.2",
         rx: "2.0.9"
 ]
