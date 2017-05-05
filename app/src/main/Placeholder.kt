@@ -36,7 +36,18 @@ class Placeholder(val placeholder: String, val start: Int, val end: Int, val ste
      * by the start, end and step values.
      */
     fun expand(target: String): Set<String> {
-        /// stub
-        return setOf()
+        val range = (start..end step step).map { it.toString(10) }
+        val paddingString = paddingChar.toString().repeat(paddingSize)
+        val padded = range
+                .map { it ->
+                    if (it.length >= paddingSize)
+                        it
+                    else (paddingString + it).substring(it.length, paddingSize + it.length)
+                }
+        if (!target.contains(placeholder)) {
+            return setOf()
+        }
+        return padded.map { it -> target.replace(placeholder, it) }.toSet()
     }
+
 }
