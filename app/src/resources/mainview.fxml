@@ -11,16 +11,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-<GridPane alignment="center" gridLinesVisible="true" hgap="5" prefHeight="30.0" prefWidth="500.0" vgap="10"
+<GridPane alignment="center" hgap="5" prefHeight="30.0" prefWidth="600.0" vgap="10"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112"
           fx:controller="Controller">
  <stylesheets>
-    <URL value="@tffontsize.css" />
+    <URL value="@styles.css" />
   </stylesheets>
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="80.0" percentWidth="15.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" prefWidth="80.0" percentWidth="15.0"/>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="350.0" percentWidth="65.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="50.0" percentWidth="10.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" prefWidth="80.0" percentWidth="10.0"/>
     </columnConstraints>
 
     <rowConstraints>
