@@ -33,9 +33,13 @@ class Placeholder(val placeholder: String, val start: Int, val end: Int, val ste
 
     /**
      * Substitute each occurrence of the placeholder in the target string with values from the range defined
-     * by the start, end and step values.
+     * by the start, end and step values. If the target string does not contain the placeholder, an empty set is returned.
+     * @param target string in which all placeholder occurrences are to be substituted.
      */
     fun expand(target: String): Set<String> {
+        if (!target.contains(placeholder)) {
+            return setOf()
+        }
         val range = (start..end step step).map { it.toString(10) }
         val paddingString = paddingChar.toString().repeat(paddingSize)
         val padded = range
@@ -44,9 +48,6 @@ class Placeholder(val placeholder: String, val start: Int, val end: Int, val ste
                         it
                     else (paddingString + it).substring(it.length, paddingSize + it.length)
                 }
-        if (!target.contains(placeholder)) {
-            return setOf()
-        }
         return padded.map { it -> target.replace(placeholder, it) }.toSet()
     }
 
