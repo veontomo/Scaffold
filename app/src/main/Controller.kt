@@ -37,20 +37,16 @@ class Controller : Initializable {
                             { print("Done") },
                             { e -> print(e.message) })
         }
-        clear?.onAction = EventHandler { clearInputField() }
+        clear?.onAction = EventHandler { clearInputFields(setOf(selectedFiles, pattern, folderName)) }
 
 
     }
 
-    private fun clearInputField() {
-        selectedFiles?.let {
-            it.text = null
-        }
-        pattern?.let {
-            it.text = null
-        }
-        folderName?.let {
-            it.text = null
-        }
+    /**
+     * Clear the content of each text field.
+     * @param views set of text fields. Null elements are ignored.
+     */
+    private fun clearInputFields(views: Set<TextField?>) {
+        views.filterNotNull().forEach { it.text = null }
     }
 }

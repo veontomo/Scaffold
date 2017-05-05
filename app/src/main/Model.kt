@@ -16,6 +16,7 @@ class Model {
         if (!folder.exists()) {
             return Completable.error(Throwable("Folder $folderName not found."))
         }
+        val placeholder = Placeholder()
 
         return Completable.complete()
 
