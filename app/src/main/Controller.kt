@@ -14,10 +14,11 @@ class Controller : Initializable {
     @FXML private var selectedFiles: TextField? = null
     @FXML private var folderName: TextField? = null
     @FXML private var pattern: TextField? = null
-    @FXML private var placeholder: TextField? = null
-    @FXML private var range: TextField? = null
-    @FXML private var padding: TextField? = null
-    @FXML private var step: TextField? = null
+    @FXML private var placeholderField: TextField? = null
+    @FXML private var startField: TextField? = null
+    @FXML private var endField: TextField? = null
+    @FXML private var paddingField: TextField? = null
+    @FXML private var stepField: TextField? = null
 
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
@@ -26,10 +27,11 @@ class Controller : Initializable {
             model.start(fileName = selectedFiles?.text ?: EMPTY,
                     folderName = folderName?.text ?: EMPTY,
                     pattern = pattern?.text ?: EMPTY,
-                    marker = placeholder?.text ?: EMPTY,
-                    range = range?.text ?: EMPTY,
-                    padding = padding?.text ?: EMPTY,
-                    step = step?.text ?: EMPTY)
+                    marker = placeholderField?.text ?: EMPTY,
+                    start = startField?.text ?: EMPTY,
+                    end = endField?.text ?: EMPTY,
+                    padding = paddingField?.text ?: EMPTY,
+                    step = stepField?.text ?: EMPTY)
 
                     .subscribe(
                             { print("Done") },

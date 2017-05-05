@@ -9,13 +9,17 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<GridPane alignment="center" gridLinesVisible="true" hgap="5" prefHeight="30.0" prefWidth="500.0" vgap="5"
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<GridPane alignment="center" gridLinesVisible="true" hgap="5" prefHeight="30.0" prefWidth="500.0" vgap="10"
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112"
           fx:controller="Controller">
-
+ <stylesheets>
+    <URL value="@tffontsize.css" />
+  </stylesheets>
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="60.0" percentWidth="10.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="350.0" percentWidth="70.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="80.0" percentWidth="15.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="350.0" percentWidth="65.0"/>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="50.0" percentWidth="10.0"/>
     </columnConstraints>
 
@@ -34,18 +38,29 @@
     <Text text="Scaffold as" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
     <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="pattern"/>
 
-    <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="BASELINE_CENTER">
-        <Text text="Placeholder"/>
-        <TextField fx:id="placeholder"/>
-        <Text text="Range (m..n)"/>
-        <TextField fx:id="range" text="1..15"/>
-        <Text text="Step"/>
-        <TextField fx:id="step" text="1"/>
-        <Text text="Padding"/>
-        <TextField fx:id="padding" text="000"/>
+    <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="BASELINE_CENTER" spacing="10">
+        <VBox spacing="5">
+            <Text text="Placeholder"/>
+            <TextField fx:id="placeholderField"/>
+        </VBox>
+        <VBox spacing="5">
+            <Text text="Start"/>
+            <TextField fx:id="startField" text="1"/>
+        </VBox>
+        <VBox spacing="5">
+            <Text text="End"/>
+            <TextField fx:id="endField" text="15"/>
+        </VBox>
+        <VBox spacing="5">
+            <Text text="Step"/>
+            <TextField fx:id="stepField" text="1"/>
+        </VBox>
+        <VBox spacing="5">
+            <Text text="Padding"/>
+            <TextField fx:id="paddingField" text="000"/>
+        </VBox>
     </HBox>
-    <HBox GridPane.rowIndex="4" GridPane.columnIndex="1" alignment="BASELINE_CENTER">
-
+    <HBox GridPane.rowIndex="4" GridPane.columnIndex="1" alignment="BASELINE_CENTER" spacing="40">
         <Button mnemonicParsing="false" text="Start" fx:id="start"/>
         <Button mnemonicParsing="false" text="Clear" fx:id="clear"/>
     </HBox>

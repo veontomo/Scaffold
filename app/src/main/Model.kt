@@ -6,18 +6,16 @@ import java.io.FileNotFoundException
  *  Model for the main screen.
  */
 class Model {
-    fun start(fileName: String, folderName: String, pattern: String, marker: String, range: String, step: String, padding: String): Completable {
-        val ranges = range.split(regex = Regex("\\.\\."), limit = 0)
-        if (ranges.count() != 2) return Completable.error(Throwable("Wrong range format"))
-        val start = try {
-            ranges[0].toInt()
+    fun start(fileName: String, folderName: String, pattern: String, marker: String, start: String, end: String, step: String, padding: String): Completable {
+        val startInt = try {
+            start.toInt()
         } catch (e: NumberFormatException) {
-            return Completable.error(Throwable("Wrong range initial value: ${ranges[0]}"))
+            return Completable.error(Throwable("Wrong range initial value: $start"))
         }
-        val end = try {
-            ranges[1].toInt()
+        val endInt = try {
+            end.toInt()
         } catch (e: NumberFormatException) {
-            return Completable.error(Throwable("Wrong range final value: ${ranges[1]}"))
+            return Completable.error(Throwable("Wrong range final value: $end"))
         }
 
         val stepInt = try {
@@ -27,7 +25,7 @@ class Model {
         }
         val paddingSize = padding.count()
         val paddingChar = if (paddingSize == 0) null else padding[0]
-        val placeholder2 = Placeholder(placeholder = marker, start = start, end = end, paddingSize = paddingSize, paddingChar = paddingChar, step = stepInt)
+        val placeholder2 = Placeholder(placeholder = marker, start = startInt, end = endInt, paddingSize = paddingSize, paddingChar = paddingChar, step = stepInt)
         val names = placeholder2.expand(pattern)
         try {
             copyFile(fileName, folderName, names)
