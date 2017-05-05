@@ -67,8 +67,8 @@ dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:$versions.junitJupiter")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:$versions.junitJupiter")
     compile "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
+    compile "io.reactivex.rxjava2:rxkotlin:$versions.rx"
     compile 'org.reactivestreams:reactive-streams:1.0.0.final'
-    compile 'io.reactivex.rxjava2:rxkotlin:2.0.0'
 }
 
 junitPlatform {

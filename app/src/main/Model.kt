@@ -1,12 +1,11 @@
 import io.reactivex.Completable
-import io.reactivex.functions.Action
 import java.io.File
 
 /**
  *  Model for the main screen.
  */
 class Model {
-    fun start(fileName: String, folderName: String, pattern: String, placeholder: String, range: String, step: String, padding: String): Completable {
+    fun start(fileName: String, folderName: String, pattern: String, marker: String, range: String, step: String, padding: String): Completable {
         val file = File(fileName)
         if (!file.exists()) {
             return Completable.error(Throwable("File $fileName not found."))
@@ -36,8 +35,8 @@ class Model {
         }
         val paddingSize = padding.count()
         val paddingChar = if (paddingSize == 0) null else padding[0]
-        val placeholder = Placeholder(placeholder = placeholder, start = start, end = end, paddingSize = paddingSize, paddingChar = paddingChar, step = stepInt)
-        val names = placeholder.expand(pattern)
+        val placeholder2 = Placeholder(placeholder = marker, start = start, end = end, paddingSize = paddingSize, paddingChar = paddingChar, step = stepInt)
+        val names = placeholder2.expand(pattern)
 
 
         return Completable.complete()

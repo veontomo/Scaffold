@@ -1,5 +1,3 @@
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
 import javafx.event.EventHandler
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable
@@ -28,7 +26,7 @@ class Controller : Initializable {
             model.start(fileName = selectedFiles?.text ?: EMPTY,
                     folderName = folderName?.text ?: EMPTY,
                     pattern = pattern?.text ?: EMPTY,
-                    placeholder = placeholder?.text ?: EMPTY,
+                    marker = placeholder?.text ?: EMPTY,
                     range = range?.text ?: EMPTY,
                     padding = padding?.text ?: EMPTY,
                     step = step?.text ?: EMPTY)

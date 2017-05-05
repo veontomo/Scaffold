@@ -21,8 +21,8 @@ class Placeholder(val placeholder: String, val start: Int, val end: Int, val ste
 
     private fun checkRep() {
         if (placeholder.isEmpty()) throw Exception("Placeholder can not be empty")
-        if (start > end && step <= 0) throw Exception("Step value must be positive")
-        if (start < end && step >= 0) throw Exception("Step value must be negative")
+        if (start > end && step >= 0) throw Exception("Step value must be positive")
+        if (start < end && step <= 0) throw Exception("Step value must be negative")
         if (paddingSize < 0) throw Exception("Padding size must be non-negative")
         if (paddingSize != 0 && paddingChar == null) throw Exception("Padding char must be set")
     }
@@ -35,8 +35,8 @@ class Placeholder(val placeholder: String, val start: Int, val end: Int, val ste
      * Substitute each occurrence of the placeholder in the target string with values from the range defined
      * by the start, end and step values.
      */
-    fun expand(target: String): Array<String> {
+    fun expand(target: String): Set<String> {
         /// stub
-        return arrayOf()
+        return setOf()
     }
 }
