@@ -7,7 +7,7 @@
  * @param paddingSize minimal length of the placeholder after being substituted with a numeric value
  * @param paddingChar a char by which the placeholder is to be padded
  */
-class Placeholder(val placeholder: String, val start: Int, val end: Int, val step: Int, val paddingSize: Int, val paddingChar: Char) {
+class Placeholder(val placeholder: String, val start: Int, val end: Int, val step: Int, val paddingSize: Int, val paddingChar: Char?) {
     /**
      * This ADT is completely immutable: all fields are of primitive types and declared as constants.
      *
@@ -16,16 +16,27 @@ class Placeholder(val placeholder: String, val start: Int, val end: Int, val ste
      * 2. if start > end, then step must be positive
      * 3. if start < end, then step must be negative
      * 4. paddingSize must be non-negative integer
+     * 5. if paddingChar is null, then paddingSize must be zero
      */
 
-    private fun checkRep(){
+    private fun checkRep() {
         if (placeholder.isEmpty()) throw Exception("Placeholder can not be empty")
-        if (start > end  && step <= 0) throw Exception("Step value must be positive")
-        if (start < end  && step >= 0) throw Exception("Step value must be negative")
+        if (start > end && step <= 0) throw Exception("Step value must be positive")
+        if (start < end && step >= 0) throw Exception("Step value must be negative")
         if (paddingSize < 0) throw Exception("Padding size must be non-negative")
+        if (paddingSize != 0 && paddingChar == null) throw Exception("Padding char must be set")
     }
 
     init {
         checkRep()
+    }
+
+    /**
+     * Substitute each occurrence of the placeholder in the target string with values from the range defined
+     * by the start, end and step values.
+     */
+    fun expand(target: String): Array<String> {
+        /// stub
+        return arrayOf()
     }
 }
