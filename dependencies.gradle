@@ -1,4 +1,5 @@
 ext.versions = [
-        kotlin: "1.1.2",
-        rx: "2.0.9"
+        kotlin      : "1.1.2",
+        junitJupiter: "5.0.0-M4",
+        rx          : "2.0.9"
 ]
