@@ -35,6 +35,16 @@
     <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="pattern"/>
 
     <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="BASELINE_CENTER">
+        <Text text="Placeholder"/>
+        <TextField fx:id="placeholder"/>
+        <Text text="Range (m..n)"/>
+        <TextField fx:id="range" text="1..15"/>
+        <Text text="Step"/>
+        <TextField fx:id="step" text="1"/>
+        <Text text="Padding"/>
+        <TextField fx:id="padding" text="000"/>
+    </HBox>
+    <HBox GridPane.rowIndex="4" GridPane.columnIndex="1" alignment="BASELINE_CENTER">
 
         <Button mnemonicParsing="false" text="Start" fx:id="start"/>
         <Button mnemonicParsing="false" text="Clear" fx:id="clear"/>
