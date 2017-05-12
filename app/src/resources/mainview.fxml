@@ -32,11 +32,11 @@
     <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="selectFileBtn"/>
 
     <Text text="Folder" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="folderName"/>
+    <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="folderNameField"/>
     <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
     <Text text="Scaffold as" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="pattern"/>
+    <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="patternField"/>
 
     <HBox GridPane.rowIndex="3" GridPane.columnIndex="1" alignment="BASELINE_CENTER" spacing="10">
         <VBox spacing="5">
@@ -61,8 +61,8 @@
         </VBox>
     </HBox>
     <HBox GridPane.rowIndex="4" GridPane.columnIndex="1" alignment="BASELINE_CENTER" spacing="40">
-        <Button mnemonicParsing="false" text="Start" fx:id="start"/>
-        <Button mnemonicParsing="false" text="Clear" fx:id="clear"/>
+        <Button mnemonicParsing="false" text="Start" fx:id="startBtn"/>
+        <Button mnemonicParsing="false" text="Clear" fx:id="clearBtn"/>
     </HBox>
-    <TextField GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="message"/>
+    <Text GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="message"/>
 </GridPane>
