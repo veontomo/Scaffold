@@ -29,7 +29,7 @@
 
     <Text text="Files" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
     <TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="selectedFiles"/>
-    <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+    <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="selectFileBtn"/>
 
     <Text text="Folder" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="folderName"/>
@@ -64,4 +64,5 @@
         <Button mnemonicParsing="false" text="Start" fx:id="start"/>
         <Button mnemonicParsing="false" text="Clear" fx:id="clear"/>
     </HBox>
+    <TextField GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="message"/>
 </GridPane>

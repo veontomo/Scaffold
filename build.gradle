@@ -1,12 +1,12 @@
 group 'Scaffold'
-version '0.0.1'
+version '0.0.2'
 
 apply plugin: 'idea'
 apply plugin: "application"
 apply plugin: "java"
 apply plugin: "kotlin"
 apply from: 'dependencies.gradle'
-mainClassName = 'scaffold.MainKt'
+mainClassName = 'MainKt'
 
 buildscript {
     apply from: 'dependencies.gradle'
@@ -23,6 +23,15 @@ buildscript {
 
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    // This line of code recursively collects and copies all of a project's files
+    // and adds them to the JAR itself. One can extend this task, to skip certain
+    // files or particular types at will
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
 // create an auxiliary file for the MockMaker of the Mockito 2 framework.
 // see http://hadihariri.com/2016/10/04/Mocking-Kotlin-With-Mockito/
 task createTestResources << {
@@ -49,8 +58,8 @@ repositories {
 }
 
 sourceSets {
-    main.java.srcDirs += 'src/main/kotlin/'
-    test.java.srcDirs += 'src/test/kotlin/'
+    main.java.srcDirs += 'src/main/'
+    test.java.srcDirs += 'src/test/'
 }
 
 jar {

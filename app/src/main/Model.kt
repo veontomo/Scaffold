@@ -6,7 +6,7 @@ import java.io.FileNotFoundException
  *  Model for the main screen.
  */
 class Model {
-    fun start(fileName: String, folderName: String, pattern: String, marker: String, start: String, end: String, step: String, padding: String): Completable {
+    fun start(fileNames: Array<String>, folderName: String, pattern: String, marker: String, start: String, end: String, step: String, padding: String): Completable {
         val startInt = try {
             start.toInt()
         } catch (e: NumberFormatException) {
@@ -28,7 +28,7 @@ class Model {
         val placeholder2 = Placeholder(placeholder = marker, start = startInt, end = endInt, paddingSize = paddingSize, paddingChar = paddingChar, step = stepInt)
         val names = placeholder2.expand(pattern)
         try {
-            copyFile(fileName, folderName, names)
+            fileNames.forEach { it -> copyFile(it, folderName, names) }
         } catch (e: FileNotFoundException) {
             return Completable.error(Throwable(e.message))
         } catch (e: FileAlreadyExistsException) {
