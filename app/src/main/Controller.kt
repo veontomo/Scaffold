@@ -4,7 +4,9 @@ import javafx.fxml.Initializable
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import javafx.scene.text.Text
+import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
+import java.io.File
 import java.net.URL
 import java.util.*
 
@@ -22,10 +24,12 @@ class Controller : Initializable {
     @FXML private var paddingField: TextField? = null
     @FXML private var stepField: TextField? = null
     @FXML private var selectFileBtn: Button? = null
+    @FXML private var selectFolder: Button? = null
     @FXML private var message: Text? = null
 
 
     private val fileChooser = FileChooser()
+    private val direcoryChooser = DirectoryChooser()
 
     /**
      * String used to separate different file names
@@ -47,12 +51,24 @@ class Controller : Initializable {
                     step = stepField?.text ?: EMPTY)
 
                     .subscribe(
-                            { showMessage("Done") },
-                            { e -> showMessage(e.message ?: "An error occurred") })
+                            { setMessage("Done") },
+                            { e -> setMessage(e.message ?: "An error occurred") })
         }
         clear?.onAction = EventHandler { clearInputFields(setOf(selectedFiles, pattern, folderName)) }
         selectFileBtn?.setOnAction { onSelectFiles() }
+        selectFolder?.setOnAction { onFolderSelected() }
 
+    }
+
+    private fun onFolderSelected() {
+        val folder = direcoryChooser.showDialog(selectFolder!!.scene.window)
+        folder?.let {
+            setFolder(it.absolutePath)
+        }
+    }
+
+    private fun setFolder(path: String){
+        folderName?.text = path
     }
 
     /**
@@ -64,10 +80,10 @@ class Controller : Initializable {
     }
 
     fun onSelectFiles() {
-        showMessage("")
+        setMessage("")
         val file = fileChooser.showOpenMultipleDialog(selectFileBtn!!.scene.window)
-        val filePaths = file.joinToString(separator) { it.absolutePath }
-        setSelectedFiles(filePaths)
+        val filePaths = file?.joinToString(separator) { it.absolutePath }
+        filePaths?.let { setSelectedFiles(filePaths) }
     }
 
 
@@ -75,7 +91,7 @@ class Controller : Initializable {
         selectedFiles?.text = filePaths
     }
 
-    fun showMessage(txt: String) {
+    fun setMessage(txt: String) {
         message?.text = txt
     }
 }
