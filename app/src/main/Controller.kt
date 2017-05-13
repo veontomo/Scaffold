@@ -31,13 +31,18 @@ class Controller : Initializable {
     private val fileChooser = FileChooser()
     private val directoryChooser = DirectoryChooser()
 
-    val indexedFields = setOf(patternField, paddingField, startField, endField, paddingField)
+    /**
+     * Set of text fields which values are to be filled in by previosly used values
+     * when the app starts.
+     */
+    lateinit var indexedFields: Set<TextField?>
     /**
      * String used to separate different file names
      */
     private val separator = ","
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
+        indexedFields = setOf(patternField, paddingField, startField, endField, paddingField)
         restoreLatestData(indexedFields)
         startBtn?.onAction = EventHandler {
             val names = selectedFiles?.text?.split(separator)?.map { it.trim() }?.toTypedArray() ?: arrayOf<String>()
