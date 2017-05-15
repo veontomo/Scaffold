@@ -64,5 +64,5 @@
         <Button mnemonicParsing="false" text="Start" fx:id="startBtn"/>
         <Button mnemonicParsing="false" text="Clear" fx:id="clearBtn"/>
     </HBox>
-    <Text GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="message"/>
+    <Text GridPane.rowIndex="5" GridPane.columnIndex="1" fx:id="message" styleClass="message"/>
 </GridPane>

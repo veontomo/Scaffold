@@ -3,5 +3,10 @@
     -fx-font-family: Tahoma;
 }
 .text {
--fx-font-size: 11pt;
+    -fx-font-size: 11pt;
+}
+.message {
+    -fx-font-size: 12pt;
+    -fx-font-family: Tahoma;
+    -fx-fill: red;
 }
