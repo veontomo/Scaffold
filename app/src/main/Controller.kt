@@ -42,7 +42,7 @@ class Controller : Initializable {
     private val separator = ","
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
-        indexedFields = setOf(patternField, paddingField, startField, endField, paddingField)
+        indexedFields = setOf(patternField, stepField, startField, endField, paddingField, placeholderField)
         restoreLatestData(indexedFields)
         startBtn?.onAction = EventHandler {
             val names = selectedFiles?.text?.split(separator)?.map { it.trim() }?.toTypedArray() ?: arrayOf<String>()

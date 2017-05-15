@@ -33,7 +33,7 @@
 
     <Text text="Folder" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <TextField GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="folderNameField"/>
-    <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+    <Button mnemonicParsing="false" text="Select" GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="selectFolderBtn"/>
 
     <Text text="Scaffold as" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
     <TextField GridPane.rowIndex="2" GridPane.columnIndex="1" fx:id="patternField"/>
