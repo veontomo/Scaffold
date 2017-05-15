@@ -40,7 +40,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="Scaffold_main" />
-    <orderEntry type="module" module-name="Scaffold_test" />
   </component>
 </module>

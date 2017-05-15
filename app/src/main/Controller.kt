@@ -6,6 +6,7 @@ import javafx.scene.control.TextField
 import javafx.scene.text.Text
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
+import java.io.File
 import java.net.URL
 import java.util.*
 import java.util.prefs.Preferences
@@ -80,12 +81,23 @@ class Controller : Initializable {
     }
 
     /**
-     * Show a dialog window to select a folder
+     * Show a dialog window to select a folder.
+     * If the preferences contain a last used directory, then the directory chooser is to be set that directory as
+     * the initial one.
      */
     private fun showSelectFolderDialog() {
-        val folder = directoryChooser.showDialog(selectFolderBtn!!.scene.window)
-        folder?.let {
-            setFolder(it.absolutePath)
+        selectFolderBtn?.let { btn ->
+            val dir = preferences.get(btn.id, null)
+            dir?.let {
+                directoryChooser.initialDirectory = File(it)
+            }
+            directoryChooser.showDialog(btn.scene.window)?.let {
+                folder ->
+                folder.let {
+                    setFolder(it.absolutePath)
+                    preferences.put(btn.id, folder.absolutePath)
+                }
+            }
         }
     }
 
@@ -103,12 +115,29 @@ class Controller : Initializable {
 
     /**
      * Show a dialog to select multiple files
+     * If the preferences contain a directory a first file has been selected form,
+     * then the file chooser is to be set that directory as the initial one.
      */
     fun showSelectFileDialog() {
         setMessage("")
-        val file = fileChooser.showOpenMultipleDialog(selectFileBtn!!.scene.window)
-        val filePaths = file?.joinToString(separator) { it.absolutePath }
-        filePaths?.let { setSelectedFiles(filePaths) }
+        selectFileBtn?.let { btn ->
+            preferences.get(btn.id, null)?.let {
+                lastDir ->
+                run {
+                    val dir = File(lastDir)
+                    if (dir.exists()) {
+                        fileChooser.initialDirectory = dir
+                    }
+                }
+            }
+            fileChooser.showOpenMultipleDialog(btn.scene.window)?.let {
+                files ->
+                run {
+                    setSelectedFiles(files.joinToString(separator) { it.absolutePath })
+                    preferences.put(btn.id, files.firstOrNull()?.parent)
+                }
+            }
+        }
     }
 
 
