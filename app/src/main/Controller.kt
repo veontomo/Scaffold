@@ -51,21 +51,34 @@ class Controller : Initializable {
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         indexedFields = setOf(patternField, stepField, startField, endField, paddingField, placeholderField)
         restoreParams(preferences, indexedFields)
+
         startBtn?.onAction = EventHandler {
             val names = selectedFiles?.text?.split(separator)?.map { it.trim() }?.toTypedArray() ?: arrayOf<String>()
             val folder = folderNameField?.text ?: EMPTY
             val pattern = patternField?.text ?: EMPTY
-            val marker = placeholderField?.text ?: EMPTY
+            val placeholder = placeholderField?.text ?: EMPTY
             val start = startField?.text ?: EMPTY
             val end = endField?.text ?: EMPTY
             val padding = paddingField?.text ?: EMPTY
             val step = stepField?.text ?: EMPTY
 
             storeParams(preferences, indexedFields)
+
+            model.fileNames(names = names).subscribe({}, { e -> onFileNamesError(e.message) })
+            model.folderName(name = folder).subscribe({}, { e -> onFolderNameError(e.message) })
+            model.startValue(value = start).subscribe({}, { e -> onStartCounterError(e.message) })
+            model.endValue(value = end).subscribe({}, { e -> onEndCounterError(e.message) })
+            model.stepValue(value = step).subscribe({}, { e -> onStepCounterError(e.message) })
+            model.paddingValue(value = padding).subscribe({}, { e -> onPaddingError(e.message) })
+            model.placeholderValue(value = placeholder).subscribe({}, { e -> onPlaceholderError(e.message) })
+
+
+
+
             model.start(fileNames = names,
                     folderName = folder,
                     pattern = pattern,
-                    marker = marker,
+                    marker = placeholder,
                     start = start,
                     end = end,
                     padding = padding,
@@ -74,10 +87,43 @@ class Controller : Initializable {
                             { setMessage("Done") },
                             { e -> setMessage(e.message ?: "Unknown error occurred") })
         }
+
+
         clearBtn?.onAction = EventHandler { clearInputFields(setOf(selectedFiles, patternField, folderNameField, placeholderField, startField, endField, stepField, paddingField)) }
         selectFileBtn?.setOnAction { showSelectFileDialog() }
         selectFolderBtn?.setOnAction { showSelectFolderDialog() }
 
+    }
+
+    private fun onPlaceholderError(message: String?) {
+        println(message)
+    }
+
+    private fun onPaddingError(message: String?) {
+        println(message)
+    }
+
+    private fun onStepCounterError(message: String?) {
+        println(message)
+    }
+
+    private fun onEndCounterError(message: String?) {
+        println(message)
+    }
+
+    private fun onStartCounterError(message: String?) {
+        println(message)
+    }
+
+    private fun onFolderNameError(message: String?) {
+        println(message)
+    }
+
+    /**
+     * Highlight the input field corresponding to the file names
+     */
+    private fun onFileNamesError(message: String?) {
+        println(message)
     }
 
     /**

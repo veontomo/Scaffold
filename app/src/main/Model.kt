@@ -6,6 +6,27 @@ import java.io.FileNotFoundException
  *  Model for the main screen.
  */
 class Model {
+
+    /**
+     * list of full path names of the files to be multiplicated (scaffolded)
+     */
+    private var fileNames: Array<String> = arrayOf()
+
+    /**
+     * full path to the folder in which the newly created files are to be copied
+     */
+    private var folderName: String? = null
+
+    private var startC: Int? = null
+
+    private var endC: Int? = null
+
+    private var  stepC: Int? = null
+
+    private var  padding: String? = null
+
+    private var  placeholder: String? = null
+
     fun start(fileNames: Array<String>, folderName: String, pattern: String, marker: String, start: String, end: String, step: String, padding: String): Completable {
         val startInt = try {
             start.toInt()
@@ -38,7 +59,6 @@ class Model {
 
     }
 
-
     private fun copyFile(fileName: String, folderName: String, dirNames: Set<String>) {
         val file = File(fileName)
         if (!file.exists()) {
@@ -55,5 +75,58 @@ class Model {
         val normalizedFolder = if (folderName.endsWith(separ)) folderName else folderName + separ
         val normalizedNames = dirNames.map { normalizedFolder + it + separ + file.name }
         normalizedNames.forEach { file.copyTo(target = File(it), overwrite = false) }
+    }
+
+
+    fun fileNames(names: Array<String>): Completable {
+        fileNames = names.clone()
+        val missing = fileNames.filterNot { name -> File(name).exists() }
+        return if (missing.isEmpty()) Completable.complete() else Completable.error(Throwable("File(s) ${missing.joinToString { it }} not found."))
+    }
+
+    fun folderName(name: String): Completable {
+        folderName = name
+        val folder = File(name)
+        return if (!folder.exists()) {
+            Completable.error(FileNotFoundException("Folder ${folder.absolutePath} is not found."))
+        } else {
+            Completable.complete()
+        }
+    }
+
+    fun startValue(value: String): Completable {
+        startC = try {
+            value.toInt()
+        } catch (e: NumberFormatException) {
+            return Completable.error(Throwable("Wrong start value: $value"))
+        }
+        return Completable.complete()
+    }
+
+    fun endValue(value: String): Completable {
+        endC = try {
+            value.toInt()
+        } catch (e: NumberFormatException) {
+            return Completable.error(Throwable("Wrong end value: $value"))
+        }
+        return Completable.complete()
+    }
+
+    fun stepValue(value: String): Completable {
+
+        stepC = try {
+            value.toInt()
+        } catch (e: NumberFormatException) {
+            return Completable.error(Throwable("Wrong step value: $value"))
+        }
+        return Completable.complete()
+    }
+
+    fun  paddingValue(value: String): Completable {
+        padding = value
+    }
+
+    fun  placeholderValue(value: String): Completable {
+        placeholder = value
     }
 }
