@@ -16,8 +16,8 @@ class Controller : Initializable {
     private val model = Model()
     @FXML private var startBtn: Button? = null
     @FXML private var clearBtn: Button? = null
-    @FXML private var selectedFiles: TextField? = null
-    @FXML private var folderNameField: TextField? = null
+    @FXML private var filesField: TextField? = null
+    @FXML private var targetFolderField: TextField? = null
     @FXML private var patternField: TextField? = null
     @FXML private var placeholderField: TextField? = null
     @FXML private var startField: TextField? = null
@@ -30,6 +30,7 @@ class Controller : Initializable {
 
 
     private val fileChooser = FileChooser()
+
     private val directoryChooser = DirectoryChooser()
 
     /**
@@ -52,78 +53,78 @@ class Controller : Initializable {
         indexedFields = setOf(patternField, stepField, startField, endField, paddingField, placeholderField)
         restoreParams(preferences, indexedFields)
 
+
         startBtn?.onAction = EventHandler {
-            val names = selectedFiles?.text?.split(separator)?.map { it.trim() }?.toTypedArray() ?: arrayOf<String>()
-            val folder = folderNameField?.text ?: EMPTY
-            val pattern = patternField?.text ?: EMPTY
-            val placeholder = placeholderField?.text ?: EMPTY
+            val names = filesField?.text?.split(separator)?.map { it.trim() }?.toTypedArray() ?: arrayOf<String>()
+            val target = targetFolderField?.text ?: EMPTY
+            val pattern = patternField?.text
+            val placeholder = placeholderField?.text
             val start = startField?.text ?: EMPTY
             val end = endField?.text ?: EMPTY
             val padding = paddingField?.text ?: EMPTY
             val step = stepField?.text ?: EMPTY
 
             storeParams(preferences, indexedFields)
+            indexedFields.forEach { it -> enableWarning(it, false) }
 
             model.fileNames(names = names).subscribe({}, { e -> onFileNamesError(e.message) })
-            model.folderName(name = folder).subscribe({}, { e -> onFolderNameError(e.message) })
+            model.targetFolderName(name = target).subscribe({}, { e -> onTargetFolderError(e.message) })
             model.startValue(value = start).subscribe({}, { e -> onStartCounterError(e.message) })
             model.endValue(value = end).subscribe({}, { e -> onEndCounterError(e.message) })
             model.stepValue(value = step).subscribe({}, { e -> onStepCounterError(e.message) })
             model.paddingValue(value = padding).subscribe({}, { e -> onPaddingError(e.message) })
-            model.placeholderValue(value = placeholder).subscribe({}, { e -> onPlaceholderError(e.message) })
+            model.placeholderPatternValue(placeholder = placeholder, pattern = pattern).subscribe({}, { e -> onPlaceholderPatternError(e.message) })
 
 
 
 
-            model.start(fileNames = names,
-                    folderName = folder,
-                    pattern = pattern,
-                    marker = placeholder,
-                    start = start,
-                    end = end,
-                    padding = padding,
-                    step = step)
-                    .subscribe(
-                            { setMessage("Done") },
-                            { e -> setMessage(e.message ?: "Unknown error occurred") })
+
+            model.start().subscribe(
+                    { setMessage("Done") },
+                    { e -> setMessage(e.message ?: "Unknown error occurred") })
         }
 
 
-        clearBtn?.onAction = EventHandler { clearInputFields(setOf(selectedFiles, patternField, folderNameField, placeholderField, startField, endField, stepField, paddingField)) }
+        clearBtn?.onAction = EventHandler { clearInputFields(setOf(filesField, patternField, targetFolderField, placeholderField, startField, endField, stepField, paddingField)) }
         selectFileBtn?.setOnAction { showSelectFileDialog() }
         selectFolderBtn?.setOnAction { showSelectFolderDialog() }
 
     }
 
-    private fun onPlaceholderError(message: String?) {
-        println(message)
+    private fun onPatternError(message: String?) {
+        enableWarning(patternField)
+    }
+
+    private fun onPlaceholderPatternError(message: String?) {
+        enableWarning(placeholderField)
+        enableWarning(patternField)
     }
 
     private fun onPaddingError(message: String?) {
-        println(message)
+        enableWarning(paddingField)
     }
 
     private fun onStepCounterError(message: String?) {
-        println(message)
+        enableWarning(stepField)
     }
 
     private fun onEndCounterError(message: String?) {
-        println(message)
+        enableWarning(endField)
     }
 
     private fun onStartCounterError(message: String?) {
-        println(message)
+        enableWarning(startField)
     }
 
-    private fun onFolderNameError(message: String?) {
-        println(message)
+    private fun onTargetFolderError(message: String?) {
+        enableWarning(targetFolderField)
     }
 
     /**
      * Highlight the input field corresponding to the file names
      */
     private fun onFileNamesError(message: String?) {
-        println(message)
+        enableWarning(filesField)
     }
 
     /**
@@ -148,7 +149,7 @@ class Controller : Initializable {
     }
 
     private fun setFolder(path: String) {
-        folderNameField?.text = path
+        targetFolderField?.text = path
     }
 
     /**
@@ -188,7 +189,7 @@ class Controller : Initializable {
 
 
     fun setSelectedFiles(filePaths: String) {
-        selectedFiles?.text = filePaths
+        filesField?.text = filePaths
     }
 
     fun setMessage(txt: String) {
@@ -216,6 +217,17 @@ class Controller : Initializable {
     fun restoreParams(prefs: Preferences, fields: Set<TextField?>) {
         fields.forEach { field ->
             field?.let { it.text = prefs.get(field.id, null) }
+        }
+    }
+
+
+    private fun enableWarning(field: TextField?, status: Boolean = true) {
+        field?.let {
+            if (status) {
+                it.stylesheets?.add("warning.css")
+            } else {
+                it.stylesheets?.remove("warning.css")
+            }
         }
     }
 

@@ -21,43 +21,54 @@ class Model {
 
     private var endC: Int? = null
 
-    private var  stepC: Int? = null
+    private var stepC: Int? = null
 
-    private var  padding: String? = null
+    private var placeholder: String? = null
 
-    private var  placeholder: String? = null
+    private var pattern: String? = null
 
-    fun start(fileNames: Array<String>, folderName: String, pattern: String, marker: String, start: String, end: String, step: String, padding: String): Completable {
-        val startInt = try {
-            start.toInt()
-        } catch (e: NumberFormatException) {
-            return Completable.error(Throwable("Wrong range initial value: $start"))
+    private var paddingSize: Int = 0
+
+    private var paddingChar: Char? = null
+
+    fun start(): Completable {
+        val pl = placeholder
+        val start = startC
+        val end = endC
+        val step = stepC
+        val ptn = pattern
+        val folder = folderName
+
+        if (start == null)
+            return Completable.error(Throwable("Start value is not set"))
+        if (end == null)
+            return Completable.error(Throwable("End value is not set"))
+        if (pl == null)
+            return Completable.error(Throwable("Placeholder is not set"))
+        if (step == null)
+            return Completable.error(Throwable("Step value is not set"))
+        if (ptn == null)
+            return Completable.error(Throwable("Pattern is not set"))
+        if (folder == null)
+            return Completable.error(Throwable("Target folder is not set"))
+
+        val placeholder2 = try {
+            Placeholder(placeholder = pl, start = start, end = end, paddingSize = paddingSize, paddingChar = paddingChar, step = step)
+        } catch (e: Exception){
+            return Completable.error(Throwable(e.message))
         }
-        val endInt = try {
-            end.toInt()
-        } catch (e: NumberFormatException) {
-            return Completable.error(Throwable("Wrong range final value: $end"))
-        }
 
-        val stepInt = try {
-            step.toInt()
-        } catch (e: NumberFormatException) {
-            return Completable.error(Throwable("Wrong step value: $step"))
-        }
-        val paddingSize = padding.count()
-        val paddingChar = if (paddingSize == 0) null else padding[0]
-        val placeholder2 = Placeholder(placeholder = marker, start = startInt, end = endInt, paddingSize = paddingSize, paddingChar = paddingChar, step = stepInt)
-        val names = placeholder2.expand(pattern)
+        val names = placeholder2.expand(ptn)
         try {
-            fileNames.forEach { it -> copyFile(it, folderName, names) }
+            fileNames.forEach { it -> copyFile(it, folder, names) }
         } catch (e: FileNotFoundException) {
             return Completable.error(Throwable(e.message))
         } catch (e: FileAlreadyExistsException) {
             return Completable.error(Throwable(e.message))
         }
         return Completable.complete()
-
     }
+
 
     private fun copyFile(fileName: String, folderName: String, dirNames: Set<String>) {
         val file = File(fileName)
@@ -77,18 +88,17 @@ class Model {
         normalizedNames.forEach { file.copyTo(target = File(it), overwrite = false) }
     }
 
-
     fun fileNames(names: Array<String>): Completable {
         fileNames = names.clone()
         val missing = fileNames.filterNot { name -> File(name).exists() }
         return if (missing.isEmpty()) Completable.complete() else Completable.error(Throwable("File(s) ${missing.joinToString { it }} not found."))
     }
 
-    fun folderName(name: String): Completable {
+    fun targetFolderName(name: String): Completable {
         folderName = name
         val folder = File(name)
         return if (!folder.exists()) {
-            Completable.error(FileNotFoundException("Folder ${folder.absolutePath} is not found."))
+            Completable.error(FileNotFoundException("Folder '$name' is not found."))
         } else {
             Completable.complete()
         }
@@ -98,7 +108,7 @@ class Model {
         startC = try {
             value.toInt()
         } catch (e: NumberFormatException) {
-            return Completable.error(Throwable("Wrong start value: $value"))
+            return Completable.error(Throwable("Wrong start value: '$value'"))
         }
         return Completable.complete()
     }
@@ -113,7 +123,6 @@ class Model {
     }
 
     fun stepValue(value: String): Completable {
-
         stepC = try {
             value.toInt()
         } catch (e: NumberFormatException) {
@@ -122,11 +131,32 @@ class Model {
         return Completable.complete()
     }
 
-    fun  paddingValue(value: String): Completable {
-        padding = value
+
+    fun paddingValue(value: String?): Completable {
+        if (value == null) {
+            paddingSize = 0
+            paddingChar = null
+        } else {
+            paddingSize = value.length
+            paddingChar = value[0]
+        }
+        return Completable.complete()
     }
 
-    fun  placeholderValue(value: String): Completable {
-        placeholder = value
+    fun placeholderPatternValue(placeholder: String?, pattern: String?): Completable {
+        this.placeholder = placeholder
+        this.pattern = pattern
+        if (placeholder.isNullOrEmpty()) {
+            return Completable.error(Throwable("Placeholder is not set"))
+        }
+        if (pattern.isNullOrEmpty()) {
+            return Completable.error(Throwable("Scaffold pattern is not set"))
+        }
+        if (!pattern!!.contains(placeholder!!, false)) {
+            return Completable.error(Throwable("Pattern does not contain the placeholder."))
+        }
+
+        return Completable.complete()
     }
+
 }
