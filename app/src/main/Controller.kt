@@ -1,8 +1,11 @@
+import io.reactivex.Single
+import io.reactivex.functions.Function8
 import javafx.event.EventHandler
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable
 import javafx.scene.control.Button
 import javafx.scene.control.TextField
+import javafx.scene.paint.Color
 import javafx.scene.text.Text
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
@@ -12,7 +15,6 @@ import java.util.*
 import java.util.prefs.Preferences
 
 class Controller : Initializable {
-    private val EMPTY = ""
     private val model = Model()
     @FXML private var startBtn: Button? = null
     @FXML private var clearBtn: Button? = null
@@ -26,7 +28,7 @@ class Controller : Initializable {
     @FXML private var stepField: TextField? = null
     @FXML private var selectFileBtn: Button? = null
     @FXML private var selectFolderBtn: Button? = null
-    @FXML private var message: Text? = null
+    @FXML private var messageField: Text? = null
 
 
     private val fileChooser = FileChooser()
@@ -38,6 +40,10 @@ class Controller : Initializable {
      * when the app starts.
      */
     lateinit var indexedFields: Set<TextField?>
+    /**
+     * Set of text fields that are highlighted in case their content is no valid
+     */
+    lateinit var warningFields: Set<TextField?>
 
     /**
      * String used to separate different file names
@@ -51,38 +57,43 @@ class Controller : Initializable {
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         indexedFields = setOf(patternField, stepField, startField, endField, paddingField, placeholderField)
-        restoreParams(preferences, indexedFields)
+        warningFields = indexedFields + filesField + targetFolderField
 
+        restoreParams(preferences, indexedFields)
 
         startBtn?.onAction = EventHandler {
             val names = filesField?.text?.split(separator)?.map { it.trim() }?.toTypedArray() ?: arrayOf<String>()
-            val target = targetFolderField?.text ?: EMPTY
+            val target = targetFolderField?.text
             val pattern = patternField?.text
             val placeholder = placeholderField?.text
-            val start = startField?.text ?: EMPTY
-            val end = endField?.text ?: EMPTY
-            val padding = paddingField?.text ?: EMPTY
-            val step = stepField?.text ?: EMPTY
+            val start = startField?.text
+            val end = endField?.text
+            val padding = paddingField?.text
+            val step = stepField?.text
 
             storeParams(preferences, indexedFields)
-            indexedFields.forEach { it -> enableWarning(it, false) }
+            clearScene()
 
-            model.fileNames(names = names).subscribe({}, { e -> onFileNamesError(e.message) })
-            model.targetFolderName(name = target).subscribe({}, { e -> onTargetFolderError(e.message) })
-            model.startValue(value = start).subscribe({}, { e -> onStartCounterError(e.message) })
-            model.endValue(value = end).subscribe({}, { e -> onEndCounterError(e.message) })
-            model.stepValue(value = step).subscribe({}, { e -> onStepCounterError(e.message) })
-            model.paddingValue(value = padding).subscribe({}, { e -> onPaddingError(e.message) })
-            model.placeholderPatternValue(placeholder = placeholder, pattern = pattern).subscribe({}, { e -> onPlaceholderPatternError(e.message) })
+            val s1 = model.fileNames(names = names).doOnError { _ -> highlightField(filesField) }
+            val s2 = model.targetFolderName(folderName = target).doOnError { _ -> highlightField(targetFolderField) }
+            val s3 = model.integerValue(value = start).doOnError { _ -> highlightField(startField) }
+            val s4 = model.integerValue(value = end).doOnError { _ -> highlightField(endField) }
+            val s5 = model.integerValue(value = step).doOnError { _ -> highlightField(stepField) }
+            val s6 = model.stringValue(value = padding).doOnError { _ -> highlightField(patternField) }
+            val s7 = model.stringValue(value = placeholder).doOnError { _ -> highlightField(placeholderField) }
+            val s8 = model.stringValue(value = pattern).doOnError { _ -> highlightField(patternField) }
+
+            Single.zip(s1, s2, s3, s4, s5, s6, s7, s8, Function8<Array<String>, String, Int, Int, Int, String, String, String, Boolean> {
+                names, target, start, end, step, padding, placeholder, pattern ->
+                model.start(fileNames = names, placeholder = placeholder, target = target, start = start, end = end, step = step, padding = padding, pattern = pattern)
+                true
+            }).subscribe({
+                setOKMessage("Done")
+            }, { e -> setErrorMessage("Error: ${e.message}") })
 
 
-
-
-
-            model.start().subscribe(
-                    { setMessage("Done") },
-                    { e -> setMessage(e.message ?: "Unknown error occurred") })
         }
+
 
 
         clearBtn?.onAction = EventHandler { clearInputFields(setOf(filesField, patternField, targetFolderField, placeholderField, startField, endField, stepField, paddingField)) }
@@ -91,40 +102,26 @@ class Controller : Initializable {
 
     }
 
-    private fun onPatternError(message: String?) {
-        enableWarning(patternField)
-    }
-
-    private fun onPlaceholderPatternError(message: String?) {
-        enableWarning(placeholderField)
-        enableWarning(patternField)
-    }
-
-    private fun onPaddingError(message: String?) {
-        enableWarning(paddingField)
-    }
-
-    private fun onStepCounterError(message: String?) {
-        enableWarning(stepField)
-    }
-
-    private fun onEndCounterError(message: String?) {
-        enableWarning(endField)
-    }
-
-    private fun onStartCounterError(message: String?) {
-        enableWarning(startField)
-    }
-
-    private fun onTargetFolderError(message: String?) {
-        enableWarning(targetFolderField)
-    }
-
     /**
-     * Highlight the input field corresponding to the file names
+     * Clear the scene from messages and warning generated during elaboration of user input.
      */
-    private fun onFileNamesError(message: String?) {
-        enableWarning(filesField)
+    private fun clearScene() {
+        warningFields.forEach { it -> enableWarning(it, false) }
+        setMessage("")
+    }
+
+    private fun setOKMessage(s: String) {
+        messageField?.text = s
+        messageField?.fill = Color.GREEN
+    }
+
+    private fun setErrorMessage(msg: String) {
+        messageField?.text = msg
+        messageField?.fill = Color.RED
+    }
+
+    private fun highlightField(field: TextField?) {
+        enableWarning(field, true)
     }
 
     /**
@@ -193,7 +190,7 @@ class Controller : Initializable {
     }
 
     fun setMessage(txt: String) {
-        message?.text = txt
+        messageField?.text = txt
     }
 
     /**
