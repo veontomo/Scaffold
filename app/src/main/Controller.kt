@@ -74,22 +74,21 @@ class Controller : Initializable {
             storeParams(preferences, indexedFields)
             clearScene()
 
-            val s1 = model.fileNames(names = names).doOnError { _ -> highlightField(filesField) }
-            val s2 = model.targetFolderName(folderName = target).doOnError { _ -> highlightField(targetFolderField) }
-            val s3 = model.integerValue(value = start).doOnError { _ -> highlightField(startField) }
-            val s4 = model.integerValue(value = end).doOnError { _ -> highlightField(endField) }
-            val s5 = model.integerValue(value = step).doOnError { _ -> highlightField(stepField) }
-            val s6 = model.stringValue(value = padding).doOnError { _ -> highlightField(patternField) }
-            val s7 = model.stringValue(value = placeholder).doOnError { _ -> highlightField(placeholderField) }
-            val s8 = model.stringValue(value = pattern).doOnError { _ -> highlightField(patternField) }
+            val s1 = model.elaborateFileNames(names = names).doOnError { _ -> highlightField(filesField) }
+            val s2 = model.elaborateFolder(folderName = target).doOnError { _ -> highlightField(targetFolderField) }
+            val s3 = model.elaborateInteger(value = start).doOnError { _ -> highlightField(startField) }
+            val s4 = model.elaborateInteger(value = end).doOnError { _ -> highlightField(endField) }
+            val s5 = model.elaborateInteger(value = step).doOnError { _ -> highlightField(stepField) }
+            val s6 = model.elaborateString(value = padding).doOnError { _ -> highlightField(patternField) }
+            val s7 = model.elaborateString(value = placeholder).doOnError { _ -> highlightField(placeholderField) }
+            val s8 = model.elaborateString(value = pattern).doOnError { _ -> highlightField(patternField) }
 
-            Single.zip(s1, s2, s3, s4, s5, s6, s7, s8, Function8<Array<String>, String, Int, Int, Int, String, String, String, Boolean> {
+            Single.zip(s1, s2, s3, s4, s5, s6, s7, s8, Function8<Array<String>, String, Int, Int, Int, String, String, String, Unit> {
                 names, target, start, end, step, padding, placeholder, pattern ->
                 model.start(fileNames = names, placeholder = placeholder, target = target, start = start, end = end, step = step, padding = padding, pattern = pattern)
-                true
             }).subscribe({
                 setOKMessage("Done")
-            }, { e -> setErrorMessage("Error: ${e.message}") })
+            }, { e -> setErrorMessage(e.message ?: "Unknown error while scaffolding...") })
 
 
         }
